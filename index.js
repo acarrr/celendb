@@ -4,6 +4,10 @@ function parse(str) {
   return Function('"use strict";return (' + str + ')')();
 }
 
+/**
+ * The database class
+ * @class
+*/
 class Database {
   /**
    * @param {String} filePath
@@ -14,14 +18,20 @@ class Database {
     if(!fs.existsSync(this.filePath)) {
       fs.writeFileSync(this.filePath, "{}");
     }
+
+    let data = fs.readFileSync(this.filePath, "utf8");
+
+    if((data === null) || (typeof data == "undefined") || (data == "")) {
+      fs.writeFileSync(this.filePath, "{}");
+    }
   }
 
   /**
+   * This function sets a new data based on specified key in the database.
    * @param {String} key
    * @param {any} value
    * @returns {any}
   */
-
   set(key, value) {
     let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
 
@@ -56,6 +66,7 @@ class Database {
   }
 
   /**
+   * This function gets a data by specified key in the database.
    * @param {String} key
    * @return {any}
   */
@@ -85,6 +96,7 @@ class Database {
   }
 
   /**
+   * This function deletes a data by specified key in the database.
    * @param {String} key
    * @return {any}
   */
@@ -123,6 +135,7 @@ class Database {
   }
 
   /**
+   * This function checks if the database has a data by specified key.
    * @param {String} has
    * @return {Boolean}
   */
@@ -131,6 +144,7 @@ class Database {
   }
 
   /**
+   * This function push value to a data by specified key.
    * @param {String} key
    * @param {any} value
    * @returns {any}
@@ -142,6 +156,7 @@ class Database {
   }
 
   /**
+   * This function update a data by specified key.
    * @param {String} key
    * @param {Function} value
    * @return {any}
@@ -152,6 +167,7 @@ class Database {
   }
 
   /**
+   * This function update value from a data by specified key.
    * @param {String} key
    * @param {Number} index
    * @param {any} value
@@ -178,6 +194,7 @@ class Database {
   }
 
   /**
+   * This function delete a value by specified index from a data by specified key.
    * @param {String} key
    * @param {Number} index
    * @param {any} value
@@ -202,6 +219,7 @@ class Database {
   }
 
   /**
+   * This function delete specified value from a data by specified key.
    * @param {String} key
    * @param {any} filter
   */
