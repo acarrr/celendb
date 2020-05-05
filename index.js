@@ -31,6 +31,14 @@ class Database {
      * @returns {any}
     */
     this.fetch = this.get;
+
+    /**
+     * This function checks if is data number, after substracts a value to specified data in the database.
+     * @param {String} key
+     * @param {Number} value
+     * @returns {Number|Boolean}
+    */
+    this.subs = this.substract;
   }
 
   /**
@@ -257,7 +265,39 @@ class Database {
    * @returns {Object}
   */
   all() {
-    return JSON.parse8fs.readFileSync(this.filePath, "utf8"));
+    return JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+  }
+
+  /**
+   * This function checks if is data number, after adds a value to specified data in the database.
+   * @param {String} key
+   * @param {Number} value
+   * @returns {Number|Boolean}
+  */
+  add(key, value) {
+    if(!this.has(key)) {
+      return this.set(key, value);
+    } else if(this.has(key) && (typeof this.get(key) == "number")) {
+      return this.update(key, (x => x + value));
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * This function checks if is data number, after substracts a value to specified data in the database.
+   * @param {String} key
+   * @param {Number} value
+   * @returns {Number|Boolean}
+  */
+  substract(key, value) {
+    if(!this.has(key)) {
+      return this.set(key, (0 - value));
+    } else if(this.has(key) && (typeof this.get(key) == "number")) {
+      return this.update(key, (x => x - value));
+    } else {
+      return false;
+    }
   }
 }
 
