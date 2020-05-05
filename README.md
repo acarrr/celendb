@@ -29,7 +29,7 @@ db.push("a.b.c.d.g", "ok"); // index 0
 db.push("a.b.c.d.g", 212); // index 1
 db.set("a.b.c.d.h", 12);
 db.update("a.b.c.d.h", (x => x + 1));
-db.updateEl("a.b.c.d.e.g", 1, 2342);
+db.updateEl("a.b.c.d.g", 1, 2342);
 
 db.get("a.b.c");
 /*
