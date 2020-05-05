@@ -3,25 +3,20 @@ It doesn't contain error handling and advanced documentation for now.
 ---
 
 ### API
-db.set(key, value) - This function sets a new data based on specified key in the database. [#L42 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L42)
-\n
-db.get(key) - This function gets a data by specified key in the database. [#L80 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L80)
-\n
-db.fetch(key) - A clone of `db.get(key)`. [#L33 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L33)
-\n
-db.delete(key) - This function deletes a data by specified key in the database. [#L110 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L110)
-\n
-db.has(key) - This function checks if the database has a data by specified key. [#L149 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L149)
-\n
-db.push(key, value) - This function push a value to a data by specified key. [#L159 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L159)
-\n
-db.update(key, function) - This function update value as you defined by specified key. [#L171 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L171)
-\n
-db.updateEl(key, index, value) - This function update value from a data by specified key. [#L183 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L183)
-\n
-db.delElByIndex(key, index) - This function deletes a value by specified index from a data by specified key. [#L211 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L211)
-\n
-db.delElByVal(key, value) - This function deletes specified value from a data by specified key. [#L236 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L236)
+- **db.set(key, value)** - This function sets a new data based on specified key in the database. [#L50 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L50)
+- **db.get(key)** - This function gets a data by specified key in the database. [#L88 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L88)
+- **db.fetch(key)** - A clone of `db.get(key)`. [#L33 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L33)
+- **db.delete(key)** - This function deletes a data by specified key in the database. [#L118 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L118)
+- **db.has(key)** - This function checks if the database has a data by specified key. [#L157 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L157)
+- **db.push(key, value)** - This function push a value to a data by specified key. [#L167 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L167)
+- **db.update(key, function)** - This function update value as you defined by specified key. [#L179 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L179)
+- **db.updateEl(key, index, value)** - This function update value from a data by specified key. [#L191 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L191)
+- **db.delElByIndex(key, index)** - This function deletes a value by specified index from a data by specified key. [#L219 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L219)
+- **db.delElByVal(key, value)** - This function deletes specified value from a data by specified key. [#L244 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L244)
+- **db.all()** - This function gets all data in the database. [#L267 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L267)
+- **db.add()** - This function checks if is data number, after adds a value to specified data in the database. [#L277 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L277)
+- **db.substract()** - This function checks if is data number, after substracts a value to specified data in the database. [#L293 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L293)
+- **db.subs()** -  A clone of `db.substract(key)`. [#L41 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L41)
 
 ### Example
 ```js
@@ -57,10 +52,6 @@ db.get("a.b.c");
 - Added basic functions.
 
 ### Ask questions & Contribute
-Add my Discord account for any problem.
-\n
-acar#3875
+Add my Discord account for any problem. acar#3875
 
-Look GitHub page for contribute.
-\n
-[GitHub Page](https://github.com/acarrr/fendly.db)
+Look GitHub page for contribute. [GitHub Page](https://github.com/acarrr/fendly.db)
