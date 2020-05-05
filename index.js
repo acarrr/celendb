@@ -24,6 +24,13 @@ class Database {
     if((data === null) || (typeof data == "undefined") || (data == "")) {
       fs.writeFileSync(this.filePath, "{}");
     }
+
+    /**
+     * This function gets a data by specified key in the database.
+     * @param {String} key
+     * @returns {any}
+    */
+    this.fetch = this.get;
   }
 
   /**
@@ -68,7 +75,7 @@ class Database {
   /**
    * This function gets a data by specified key in the database.
    * @param {String} key
-   * @return {any}
+   * @returns {any}
   */
   get(key) {
     let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
@@ -98,7 +105,7 @@ class Database {
   /**
    * This function deletes a data by specified key in the database.
    * @param {String} key
-   * @return {any}
+   * @returns {Boolean}
   */
   delete(key) {
     let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
@@ -137,17 +144,17 @@ class Database {
   /**
    * This function checks if the database has a data by specified key.
    * @param {String} has
-   * @return {Boolean}
+   * @returns {Boolean}
   */
   has(key) {
     return (typeof this.get(key) != "undefined");
   }
 
   /**
-   * This function push value to a data by specified key.
+   * This function push a value to a data by specified key.
    * @param {String} key
    * @param {any} value
-   * @returns {any}
+   * @returns {Array}
   */
   push(key, value) {
     let arr = ((this.has(key) && Array.isArray(this.get(key))) ? this.get(key) : new Array());
@@ -156,14 +163,14 @@ class Database {
   }
 
   /**
-   * This function update a data by specified key.
+   * This function update value as you defined by specified key.
    * @param {String} key
    * @param {Function} value
-   * @return {any}
+   * @returns {any}
   */
   update(key, f) {
     let data = (this.has(key) ? this.get(key) : 0);
-    this.set(key, f(data));
+    returns this.set(key, f(data));
   }
 
   /**
@@ -171,6 +178,7 @@ class Database {
    * @param {String} key
    * @param {Number} index
    * @param {any} value
+   * @returns {Array}
   */
   updateEl(key, index, value) {
     let data = (this.has(key) ? this.get(key) : false);
@@ -194,10 +202,11 @@ class Database {
   }
 
   /**
-   * This function delete a value by specified index from a data by specified key.
+   * This function deletes a value by specified index from a data by specified key.
    * @param {String} key
    * @param {Number} index
    * @param {any} value
+   * @returns {Array}
   */
   delElByIndex(key, index) {
     let data = (this.has(key) ? this.get(key) : false);
@@ -219,9 +228,10 @@ class Database {
   }
 
   /**
-   * This function delete specified value from a data by specified key.
+   * This function deletes specified value from a data by specified key.
    * @param {String} key
    * @param {any} filter
+   * @returns {Array}
   */
   delElByVal(key, filter) {
     let data = (this.has(key) ? this.get(key) : false);
@@ -240,6 +250,14 @@ class Database {
     this.set(key, newData);
 
     return newData;
+  }
+
+  /**
+   * This function gets all data in the database.
+   * @returns {Object}
+  */
+  all() {
+    return JSON.parse8fs.readFileSync(this.filePath, "utf8"));
   }
 }
 
