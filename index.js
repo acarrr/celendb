@@ -178,7 +178,7 @@ class Database {
   */
   update(key, f) {
     let data = (this.has(key) ? this.get(key) : 0);
-    returns this.set(key, f(data));
+    return this.set(key, f(data));
   }
 
   /**
