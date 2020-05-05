@@ -1,0 +1,24 @@
+{
+  "name": "fendly.db",
+  "version": "0.0.2",
+  "description": "A simply JSON-based NoSQL database wrapper.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acarrr/fendly.db.git"
+  },
+  "keywords": [
+    "fendly.db",
+    "fendlydb",
+    "fendly"
+  ],
+  "author": "acarrr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acarrr/fendly.db/issues"
+  },
+  "homepage": "https://github.com/acarrr/fendly.db#readme"
+}
