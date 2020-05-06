@@ -6,6 +6,68 @@ try {
   fs = require("fs");
 }
 
+function get(key, filePath) {
+  let obj = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+  if(key.includes(".")) {
+    let data = new String();
+
+    for(let i = 0; i < key.split(".").length; i++) {
+      if(i == 0) {
+        data += ("obj");
+      }
+
+      data += (`["${key.split(".")[i]}"]`);
+
+      if(typeof eval(data) == "undefined") {
+        return undefined;
+        break;
+      }
+    }
+
+    return eval(data);
+  } else {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"))[key];
+  }
+}
+
+/** @private */
+function set(get, filePath, options, key, value) {
+  let obj = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  let oldValue = get(key, filePath);
+
+  if(key.includes(".")) {
+    let data = new String();
+
+    for(let i = 0; i < key.split(".").length; i++) {
+      if(i == 0) {
+        data += ("obj");
+      }
+
+      data += (`["${key.split(".")[i]}"]`);
+
+      if(typeof eval(data) == "undefined") {
+        eval(`${data} = {}`);
+      }
+    }
+
+    data += (" = ");
+    data += ('((typeof value != "undefined") ? JSON.parse(JSON.stringify(value)) : undefined)');
+
+    eval(data);
+  } else {
+    obj[key] = value;
+  }
+
+  if(options.saveReadable == true) {
+    fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
+  } else {
+    fs.writeFileSync(filePath, JSON.stringify(obj));
+  }
+
+  return value;
+}
+
 /**
  * The database class
  * @class
@@ -64,6 +126,8 @@ class Database {
       } catch(error) {
         this.events = require("eventemitter3");
       }
+
+      this.events = new this.events();
     }
 
     if((typeof options == "object") && options.hasOwnProperty("saveReadable") && (options.saveReadable === true)) {
@@ -78,48 +142,16 @@ class Database {
    * @returns {any}
   */
   set(key, value) {
-    let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
-    let oldValue = this.get(key);
-
-    if(key.includes(".")) {
-      let data = new String();
-
-      for(let i = 0; i < key.split(".").length; i++) {
-        if(i == 0) {
-          data += ("obj");
-        }
-
-        data += (`["${key.split(".")[i]}"]`);
-
-        if(typeof eval(data) == "undefined") {
-          eval(`${data} = {}`);
-        }
-      }
-
-      data += (" = ");
-      data += ('((typeof value != "undefined") ? JSON.parse(JSON.stringify(value)) : undefined)');
-
-      eval(data);
-    } else {
-      obj[key] = value;
-    }
-
     if(this.options.enableEvents == true) {
       this.events.emit("data", {
-        oldValue,
+        "oldValue": this.get(key),
         "newValue": value,
         key,
         "event": "set"
       });
     }
 
-    if(this.options.saveReadable == true) {
-      fs.writeFileSync(this.filePath, JSON.stringify(obj), null, 2);
-    } else {
-      fs.writeFileSync(this.filePath, JSON.stringify(obj));
-    }
-
-    return this.get(key);
+    return set(get, this.filePath, this.options, key, value);
   }
 
   /**
@@ -128,28 +160,7 @@ class Database {
    * @returns {any}
   */
   get(key) {
-    let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
-
-    if(key.includes(".")) {
-      let data = new String();
-
-      for(let i = 0; i < key.split(".").length; i++) {
-        if(i == 0) {
-          data += ("obj");
-        }
-
-        data += (`["${key.split(".")[i]}"]`);
-
-        if(typeof eval(data) == "undefined") {
-          return undefined;
-          break;
-        }
-      }
-
-      return eval(data);
-    } else {
-      return JSON.parse(fs.readFileSync(this.filePath, "utf8"))[key];
-    }
+    return get(key, this.filePath);
   }
 
   /**
@@ -239,7 +250,7 @@ class Database {
       });
     }
 
-    return this.set(key, arr);
+    return set(get, this.filePath, this.options, key, arr);
   }
 
   /**
@@ -260,7 +271,7 @@ class Database {
       });
     }
 
-    return this.set(key, f(data));
+    return set(get, this.filePath, this.options, key, f(data));
   }
 
   /**
@@ -297,9 +308,7 @@ class Database {
       });
     }
 
-    this.set(key, newData);
-
-    return newData;
+    return set(get, this.filePath, this.options, key, newData);
   }
 
   /**
@@ -332,9 +341,7 @@ class Database {
       });
     }
 
-    this.set(key, newData);
-
-    return newData;
+    return set(get, this.filePath, this.options, key, newData);
   }
 
   /**
@@ -366,9 +373,7 @@ class Database {
       });
     }
 
-    this.set(key, newData);
-
-    return newData;
+    return set(get, this.filePath, this.options, key, newData);
   }
 
   /**
@@ -396,10 +401,10 @@ class Database {
         });
       }
 
-      return this.set(key, value);
+      return set(get, this.filePath, this.options, key, value);
     } else if(this.has(key) && (typeof this.get(key) == "number")) {
       let oldValue = this.get(key);
-      let data = this.update(key, (x => x + value));
+      let data = set(get, this.filePath, this.options, key, (this.get(key) + value));
 
       if(this.options.enableEvents == true) {
         this.events.emit("data", {
@@ -433,10 +438,10 @@ class Database {
         });
       }
 
-      return this.set(key, (0 - value));
+      return set(get, this.filePath, this.options, key, (0 - value));
     } else if(this.has(key) && (typeof this.get(key) == "number")) {
       let oldValue = this.get(key);
-      let data = this.update(key, (x => x - value));
+      let data = set(get, this.filePath, this.options, key, (this.get(key) - value));
 
       if(this.options.enableEvents == true) {
         this.events.emit("data", {
