@@ -2,6 +2,8 @@
 It doesn't contain error handling and advanced documentation for now.
 ---
 
+![issues](https://img.shields.io/github/issues-raw/acarrr/fendly.db)
+
 ### API
 - **db.set(key, value)** - This function sets a new data based on specified key in the database. [#L50 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L50)
 - **db.get(key)** - This function gets a data by specified key in the database. [#L88 index.js on GitHub](https://github.com/acarrr/fendly.db/blob/master/index.js#L88)
