@@ -66,7 +66,7 @@ class Database {
       }
 
       data += (" = ");
-      data += (`parse('${JSON.stringify(value)}')`);
+      data += ("`${value}`");
 
       eval(data);
 
