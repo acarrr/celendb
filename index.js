@@ -97,7 +97,7 @@ class Database {
       }
 
       data += (" = ");
-      data += ("`${value}`");
+      data += ('((typeof value != "undefined") ? JSON.parse(JSON.stringify(value)) : undefined)');
 
       eval(data);
     } else {
