@@ -49,6 +49,9 @@ db.get("a.b.c");
 ```
 
 ### Changelog
++ 0.0.2 version
+- Added `.add()`, `.all()`, `.subs()`, `.substract()`, `.fetch()` functions.
+
 + 0.0.1 version
 - Module is published.
 - Added basic functions.
