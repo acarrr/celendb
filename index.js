@@ -1,9 +1,5 @@
 const fs = require("fs");
 
-function parse(str) {
-  return Function('"use strict";return (' + str + ')')();
-}
-
 /**
  * The database class
  * @class
@@ -11,8 +7,11 @@ function parse(str) {
 class Database {
   /**
    * @param {String} filePath
+   * @param {Object} options
+   * @param {Boolean} options.enableEvents - Enables EventEmitter
+   * @param {Boolean} options.saveReadable - Saves data in JSON readable format
   */
-  constructor(filePath) {
+  constructor(filePath, options) {
     this.filePath = filePath;
 
     if(!fs.existsSync(this.filePath)) {
@@ -39,6 +38,31 @@ class Database {
      * @returns {Number|Boolean}
     */
     this.subs = this.substract;
+    this.event;
+
+    /**
+     * @type {Object}
+     * @property {Boolean} enableEvents - Are events activated?
+     * @property {Boolean} saveReadable - Do saves data in JSON readable format?
+    */
+    this.options = {
+      "enableEvents": false,
+      "saveReadable": false
+    };
+
+    if(options.hasOwnProperty("enableEvents") && (options.enableEvents === true)) {
+      this.options.enableEvents = true;
+
+      try {
+        this.event = require("events");
+      } catch(error) {
+        this.event = require("eventemitter3");
+      }
+    }
+
+    if(options.hasOwnProperty("saveReadable") && (options.saveReadable === true)) {
+      this.options.saveReadable = true;
+    }
   }
 
   /**
@@ -70,6 +94,7 @@ class Database {
 
       eval(data);
 
+      if(this.options.enable
       fs.writeFileSync(this.filePath, JSON.stringify(obj));
     } else {
       obj[key] = value;
