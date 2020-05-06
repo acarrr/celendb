@@ -11,7 +11,7 @@ class Database {
    * @param {Boolean} options.enableEvents - Enables EventEmitter
    * @param {Boolean} options.saveReadable - Saves data in JSON readable format
   */
-  constructor(filePath, options) {
+  constructor(filePath, options = {}) {
     this.filePath = filePath;
 
     if(!fs.existsSync(this.filePath)) {
@@ -38,7 +38,7 @@ class Database {
      * @returns {Number|Boolean}
     */
     this.subs = this.substract;
-    this.event;
+    this.events;
 
     /**
      * @type {Object}
@@ -50,17 +50,17 @@ class Database {
       "saveReadable": false
     };
 
-    if(options.hasOwnProperty("enableEvents") && (options.enableEvents === true)) {
+    if((typeof options == "object") && options.hasOwnProperty("enableEvents") && (options.enableEvents === true)) {
       this.options.enableEvents = true;
 
       try {
-        this.event = require("events");
+        this.events = require("events");
       } catch(error) {
-        this.event = require("eventemitter3");
+        this.events = require("eventemitter3");
       }
     }
 
-    if(options.hasOwnProperty("saveReadable") && (options.saveReadable === true)) {
+    if((typeof options == "object") && options.hasOwnProperty("saveReadable") && (options.saveReadable === true)) {
       this.options.saveReadable = true;
     }
   }
@@ -73,6 +73,7 @@ class Database {
   */
   set(key, value) {
     let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+    let oldValue = this.get(key);
 
     if(key.includes(".")) {
       let data = new String();
@@ -93,12 +94,22 @@ class Database {
       data += ("`${value}`");
 
       eval(data);
-
-      if(this.options.enable
-      fs.writeFileSync(this.filePath, JSON.stringify(obj));
     } else {
       obj[key] = value;
+    }
 
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        oldValue,
+        "newValue": value,
+        key,
+        "event": "set"
+      });
+    }
+
+    if(this.options.saveReadable == true) {
+      fs.writeFileSync(this.filePath, JSON.stringify(obj), null, 2);
+    } else {
       fs.writeFileSync(this.filePath, JSON.stringify(obj));
     }
 
@@ -142,6 +153,7 @@ class Database {
   */
   delete(key) {
     let obj = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+    let oldValue = this.get(key);
 
     if(key.includes(".")) {
       let data = new String();
@@ -153,6 +165,15 @@ class Database {
 
         if(i == (key.split(".").length - 1)) {
           eval(`delete ${data}["${key.split(".")[i]}"]`);
+
+          if(this.options.enableEvents == true) {
+            this.events.emit("data", {
+              oldValue,
+              key,
+              "event": "delete"
+            });
+          }
+
           fs.writeFileSync(this.filePath, JSON.stringify(obj));
 
           return true;
@@ -168,6 +189,15 @@ class Database {
       }
     } else {
       delete obj[key];
+
+      if(this.options.enableEvents == true) {
+        this.events.emit("data", {
+          oldValue,
+          key,
+          "event": "delete"
+        });
+      }
+
       fs.writeFileSync(this.filePath, JSON.stringify(obj));
 
       return true;
@@ -192,6 +222,17 @@ class Database {
   push(key, value) {
     let arr = ((this.has(key) && Array.isArray(this.get(key))) ? this.get(key) : new Array());
     arr.push(value);
+
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        "oldValue": this.get(key),
+        "newValue": arr,
+        "pushedValue": value,
+        key,
+        "event": "push"
+      });
+    }
+
     return this.set(key, arr);
   }
 
@@ -203,6 +244,16 @@ class Database {
   */
   update(key, f) {
     let data = (this.has(key) ? this.get(key) : 0);
+
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        "oldValue": this.get(key),
+        "newValue": f(data),
+        key,
+        "event": "update"
+      });
+    }
+
     return this.set(key, f(data));
   }
 
@@ -227,6 +278,17 @@ class Database {
       } else {
         newData.push(data[i]);
       }
+    }
+
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        "oldValue": data,
+        "newValue": newData,
+        "updatedValue": value,
+        "updatedIndex": index,
+        key,
+        "event": "updateElement"
+      });
     }
 
     this.set(key, newData);
@@ -255,6 +317,15 @@ class Database {
       }
     }
 
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        "oldValue": data,
+        "newValue": newData,
+        key,
+        "event": "deleteElement"
+      });
+    }
+
     this.set(key, newData);
 
     return newData;
@@ -280,6 +351,15 @@ class Database {
       }
     }
 
+    if(this.options.enableEvents == true) {
+      this.events.emit("data", {
+        "oldValue": data,
+        "newValue": newData,
+        key,
+        "event": "deleteElement"
+      });
+    }
+
     this.set(key, newData);
 
     return newData;
@@ -301,9 +381,30 @@ class Database {
   */
   add(key, value) {
     if(!this.has(key)) {
+      if(this.options.enableEvents == true) {
+        this.events.emit("data", {
+          "oldValue": undefined,
+          "newValue": value,
+          key,
+          "event": "addValue"
+        });
+      }
+
       return this.set(key, value);
     } else if(this.has(key) && (typeof this.get(key) == "number")) {
-      return this.update(key, (x => x + value));
+      let oldValue = this.get(key);
+      let data = this.update(key, (x => x + value));
+
+      if(this.options.enableEvents == true) {
+        this.events.emit("data", {
+          oldValue,
+          "newValue": data,
+          key,
+          "event": "addValue"
+        });
+      }
+
+      return data;
     } else {
       return false;
     }
@@ -317,9 +418,30 @@ class Database {
   */
   substract(key, value) {
     if(!this.has(key)) {
+      if(this.options.enableEvents == true) {
+        this.events.emit("data", {
+          "oldValue": undefined,
+          "newValue": (0 - value),
+          key,
+          "event": "substractValue"
+        });
+      }
+
       return this.set(key, (0 - value));
     } else if(this.has(key) && (typeof this.get(key) == "number")) {
-      return this.update(key, (x => x - value));
+      let oldValue = this.get(key);
+      let data = this.update(key, (x => x - value));
+
+      if(this.options.enableEvents == true) {
+        this.events.emit("data", {
+          oldValue,
+          "newValue": data,
+          key,
+          "event": "substractValue"
+        });
+      }
+
+      return data;
     } else {
       return false;
     }
