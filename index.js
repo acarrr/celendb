@@ -1,4 +1,10 @@
-const fs = require("fs");
+let fs;
+
+try {
+  fs = require("graceful-fs");
+} catch(error) {
+  fs = require("fs");
+}
 
 /**
  * The database class
