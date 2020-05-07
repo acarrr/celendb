@@ -1,5 +1,7 @@
 let fs;
 
+// vsc test
+
 try {
   fs = require("graceful-fs");
 } catch(error) {
