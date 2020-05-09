@@ -1,5 +1,5 @@
 {
-  "name": "fendly.db",
+  "name": "celendb",
   "version": "0.0.2",
   "description": "A simply JSON-based NoSQL database wrapper.",
   "main": "index.js",
@@ -8,17 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acarrr/fendly.db.git"
+    "url": "git+https://github.com/acarrr/celendb.git"
   },
   "keywords": [
-    "fendly.db",
-    "fendlydb",
-    "fendly"
+    "fendly.db"
+    "celen.db",
+    "celendb",
+    "celen"
   ],
   "author": "acarrr",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acarrr/fendly.db/issues"
+    "url": "https://github.com/acarrr/celendb/issues"
   },
-  "homepage": "https://github.com/acarrr/fendly.db#readme"
+  "homepage": "https://github.com/acarrr/celendb#readme"
 }
