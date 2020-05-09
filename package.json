@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acarrr/fendly.db.git"
+    "url": "git+https://github.com/acarrr/celendb.git"
   },
   "keywords": [
     "fendly.db"
@@ -19,7 +19,7 @@
   "author": "acarrr",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acarrr/fendly.db/issues"
+    "url": "https://github.com/acarrr/celendb/issues"
   },
-  "homepage": "https://github.com/acarrr/fendly.db#readme"
+  "homepage": "https://github.com/acarrr/celendb#readme"
 }
